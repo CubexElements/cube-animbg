@@ -1,5 +1,5 @@
 {
-  "name": "seed-element",
+  "name": "fort-animbg",
   "version": "1.0.0",
   "authors": [
     "Anonymous <anonymous@example.com>"
@@ -11,9 +11,9 @@
     "seed"
   ],
   "private": true,
-  "main": "seed-element.html",
+  "main": "fort-animbg.html",
   "license": "MIT",
-  "homepage": "https://github.com/FortifiElements/seed-element/",
+  "homepage": "https://github.com/FortifiElements/fort-animbg/",
   "ignore": [
     "/.*",
     "/test/",
