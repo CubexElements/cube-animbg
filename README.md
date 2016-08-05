@@ -1,4 +1,4 @@
-_[Demo and API docs](https://elements.fortifi.it/elements/fort-animbg)_
+_[Demo and API docs](http://elements.fortifi.it/elements/fort-animbg)_
 
 ##&lt;fort-animbg&gt;
 
