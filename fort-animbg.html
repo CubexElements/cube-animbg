@@ -60,13 +60,11 @@ Default Polygon Size = (canvas.width + canvas.height) / 20)
         top: 0;
         left: 0;
         z-index: -1;
-
-        background-color: var(--fort-animbg-background-color) !important;
       }
     </style>
 
     <div class="animated-canvas" style$="background-color: [[color]];"></div>
-    <content></content>
+    <slot></slot>
   </template>
 
   <script>
@@ -110,10 +108,13 @@ Default Polygon Size = (canvas.width + canvas.height) / 20)
                        },
         attached:      function ()
                        {
+                         Polymer.RenderStatus.afterNextRender(this, this._render);
+                       },
+        _render:       function ()
+                       {
                          var self = this;
                          var canvas = this.$$('.animated-canvas');
                          var refreshDuration = this.speed;
-                         var refreshTimeout;
                          var numPointsX;
                          var numPointsY;
                          var unitWidth;
@@ -265,7 +266,7 @@ Default Polygon Size = (canvas.width + canvas.height) / 20)
 
                          function refresh()
                          {
-                           randomize();
+                           //randomize();
                            for(var i = 0; i < canvas.querySelector('svg').childNodes.length; i++)
                            {
                              var polygon = canvas.querySelector('svg').childNodes[i];
@@ -283,32 +284,15 @@ Default Polygon Size = (canvas.width + canvas.height) / 20)
                              );
                              try
                              {
-                               //noinspection JSUnresolvedFunction
                                animate.beginElement();
                              }
                              catch(err)
                              {
                              }
                            }
-                           refreshTimeout = setTimeout(refresh, refreshDuration);
-                         }
-
-                         function onResize()
-                         {
-                           canvas.querySelector('svg').remove();
-                           clearTimeout(refreshTimeout);
-                           animatedCanvas();
                          }
 
                          animatedCanvas();
-                         if(window.attachEvent)
-                         {
-                           window.attachEvent('onresize', onResize);
-                         }
-                         else if(window.addEventListener)
-                         {
-                           window.addEventListener('resize', onResize, true);
-                         }
                        }
       }
     );
