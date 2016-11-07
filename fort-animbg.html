@@ -60,10 +60,12 @@ Default Polygon Size = (canvas.width + canvas.height) / 20)
         top: 0;
         left: 0;
         z-index: -1;
+
+        background-color: var(--fort-animbg-background-color) !important;
       }
     </style>
 
-    <div class="animated-canvas" style$="background-color: [[color]];"></div>
+    <div class="animated-canvas"></div>
     <slot></slot>
   </template>
 
@@ -105,6 +107,7 @@ Default Polygon Size = (canvas.width + canvas.height) / 20)
         _colorChanged: function (newVal)
                        {
                          this.setAttribute('color', newVal);
+                         this.updateStyles({'--fort-animbg-background-color': newVal});
                        },
         attached:      function ()
                        {
