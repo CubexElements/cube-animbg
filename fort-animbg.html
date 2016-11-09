@@ -1,4 +1,5 @@
 <link href="../polymer/polymer.html" rel="import">
+<link href="fort-hex.html" rel="import">
 
 <!--
 Fortifi Animated Background
@@ -33,269 +34,132 @@ Default Polygon Size = (canvas.width + canvas.height) / 20)
 -->
 
 
-<dom-module id="fort-animbg" color="[[color]]" size="[[size]]" speed="[[speed]]" fixed-size fill>
+<dom-module id="fort-animbg" attributes="color size speed fixed-size fill strength">
   <template>
     <style>
       :host {
+        --fort-hex-ratio: 0.577333333333333;
+        --fort-hex-width: var(--fort-hex-size, 30px);
+        --fort-hex-height: calc(var(--fort-hex-width) * var(--fort-hex-ratio));
+
         position: relative;
         display: inline-block;
+        background-color: var(--fort-animbg-background-color);
+
+        -webkit-transform: translate3d(0, 0, 0);
+        -moz-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+        -o-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
       }
 
-      :host[fill] {
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        flex: auto;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .animated-canvas {
-        width: 100%;
-        height: 100%;
+      #overflowContainer {
         position: absolute;
+        overflow: hidden;
         top: 0;
+        right: 0;
+        bottom: 0;
         left: 0;
-        z-index: -1;
+        pointer-events: none;
+      }
 
-        background-color: var(--fort-animbg-background-color, #fff) !important;
+      #contentContainer {
+        position: relative;
+      }
+
+      #hexContainer {
+        position: absolute;
+        top: calc(var(--fort-hex-size) / 3 * -1);
+        right: calc(var(--fort-hex-size) / 3 * -1);
+        bottom: calc(var(--fort-hex-size) / 3 * -1);
+        left: calc(var(--fort-hex-size) / 3 * -1);
+      }
+
+      #hexContainer > div {
+        white-space: nowrap;
+      }
+
+      #hexContainer > div:nth-of-type(2n) {
+        margin-left: calc(((var(--fort-hex-width) / 2) + var(--fort-hex-margin, 5px)) * -1);
       }
     </style>
 
-    <div class="animated-canvas"></div>
-    <slot></slot>
+    <div id="overflowContainer">
+      <div id="hexContainer"></div>
+    </div>
+    <div id="contentContainer">
+      <slot></slot>
+    </div>
   </template>
 
   <script>
     Polymer(
       {
-        is:            'fort-animbg',
-        properties:    {
-          fill:      Boolean,
-          fixedSize: Boolean,
-          color:     {
+        is:               'fort-animbg',
+        properties:       {
+          color:    {
             type:     String,
+            value:    '#fff',
             observer: '_colorChanged'
           },
-          size:      {
-            type:     String,
-            value:    '20',
+          size:     {
+            type:     Number,
+            value:    80,
             observer: '_sizeChanged'
           },
-          speed:     {
+          speed:    {
             type:  String,
             value: '8000'
+          },
+          strength: {
+            type:     Number,
+            value:    1,
+            notify:   true,
+            observer: '_strengthChanged'
           }
         },
-        _sizeChanged:  function (newVal)
-                       {
-                         this.size = this.size.replace(/\D/g, '');
+        attached:         function ()
+                          {
+                            Polymer.RenderStatus.afterNextRender(this, this.redraw);
+                          },
+        redraw:           function ()
+                          {
+                            var firstNode;
+                            while(firstNode = this.$.hexContainer.firstChild)
+                            {
+                              this.$.hexContainer.removeChild(firstNode);
+                            }
 
-                         if(!this.size.length)
-                         {
-                           this.size = '20';
-                           return console.error(
-                             'Invalid value (' + newVal + ') provided for "size" property. ' +
-                             'Value must be a number. Default value (' + this.size + ') used'
-                           );
-                         }
-                       },
-        _colorChanged: function (newVal)
-                       {
-                         this.setAttribute('color', newVal);
-                         this.updateStyles({'--fort-animbg-background-color': newVal});
-                       },
-        attached:      function ()
-                       {
-                         Polymer.RenderStatus.afterNextRender(this, this._render);
-                       },
-        _render:       function ()
-                       {
-                         var self = this;
-                         var canvas = this.$$('.animated-canvas');
-                         var refreshDuration = this.speed;
-                         var numPointsX;
-                         var numPointsY;
-                         var unitWidth;
-                         var unitHeight;
-                         var points;
-
-                         function animatedCanvas()
-                         {
-                           var canvasWidth = canvas.offsetWidth;
-                           var canvasHeight = canvas.offsetHeight;
-                           var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-
-                           svg.setAttribute('width', canvasWidth.toString());
-                           svg.setAttribute('height', canvasHeight.toString());
-
-                           canvas.appendChild(svg);
-
-                           var unitSize = (canvasWidth + canvasHeight) / self.size;
-                           if(self.fixedSize)
-                           {
-                             unitSize = self.size;
-                           }
-
-                           numPointsX = Math.ceil(canvasWidth / unitSize) + 1;
-                           numPointsY = Math.ceil(canvasHeight / unitSize) + 1;
-                           unitWidth = Math.ceil(canvasWidth / (numPointsX - 1));
-                           unitHeight = Math.ceil(canvasHeight / (numPointsY - 1));
-
-                           points = [];
-
-                           for(var y = 0; y < numPointsY; y++)
-                           {
-                             for(var x = 0; x < numPointsX; x++)
-                             {
-                               points.push(
-                                 {
-                                   x:       unitWidth * x,
-                                   y:       unitHeight * y,
-                                   originX: unitWidth * x,
-                                   originY: unitHeight * y
-                                 }
-                               );
-                             }
-                           }
-
-                           randomize();
-
-                           for(var i = 0; i < points.length; i++)
-                           {
-                             if(points[i].originX != unitWidth * (numPointsX - 1) && points[i].originY != unitHeight * (numPointsY - 1))
-                             {
-                               if(!points[i + numPointsX])
-                               {
-                                 continue;
-                               }
-
-                               var topLeftX = points[i].x;
-                               var topLeftY = points[i].y;
-                               var topRightX = points[i + 1].x;
-                               var topRightY = points[i + 1].y;
-                               var bottomLeftX = points[i + numPointsX].x;
-                               var bottomLeftY = points[i + numPointsX].y;
-                               var bottomRightX = points[i + numPointsX + 1].x;
-                               var bottomRightY = points[i + numPointsX + 1].y;
-
-                               var rando = Math.floor(Math.random() * 2);
-
-                               for(var n = 0; n < 2; n++)
-                               {
-                                 var polygon = document.createElementNS(svg.namespaceURI, 'polygon');
-
-                                 if(rando == 0)
-                                 {
-                                   if(n == 0)
-                                   {
-                                     polygon.point1 = i;
-                                     polygon.point2 = i + numPointsX;
-                                     polygon.point3 = i + numPointsX + 1;
-                                     polygon.setAttribute(
-                                       'points',
-                                       topLeftX + ',' + topLeftY + ' ' + bottomLeftX + ',' + bottomLeftY + ' ' + bottomRightX + ',' + bottomRightY
-                                     );
-                                   }
-                                   else if(n == 1)
-                                   {
-                                     polygon.point1 = i;
-                                     polygon.point2 = i + 1;
-                                     polygon.point3 = i + numPointsX + 1;
-                                     polygon.setAttribute(
-                                       'points',
-                                       topLeftX + ',' + topLeftY + ' ' + topRightX + ',' + topRightY + ' ' + bottomRightX + ',' + bottomRightY
-                                     );
-                                   }
-                                 }
-                                 else if(rando == 1)
-                                 {
-                                   if(n == 0)
-                                   {
-                                     polygon.point1 = i;
-                                     polygon.point2 = i + numPointsX;
-                                     polygon.point3 = i + 1;
-                                     polygon.setAttribute(
-                                       'points',
-                                       topLeftX + ',' + topLeftY + ' ' + bottomLeftX + ',' + bottomLeftY + ' ' + topRightX + ',' + topRightY
-                                     );
-                                   }
-                                   else if(n == 1)
-                                   {
-                                     polygon.point1 = i + numPointsX;
-                                     polygon.point2 = i + 1;
-                                     polygon.point3 = i + numPointsX + 1;
-                                     polygon.setAttribute(
-                                       'points',
-                                       bottomLeftX + ',' + bottomLeftY + ' ' + topRightX + ',' + topRightY + ' ' + bottomRightX + ',' + bottomRightY
-                                     );
-                                   }
-                                 }
-                                 polygon.setAttribute('fill', 'rgba(0,0,0,' + (Math.random() / 10) + ')');
-
-                                 var animate = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
-                                 animate.setAttribute('fill', 'freeze');
-                                 animate.setAttribute('attributeName', 'points');
-                                 animate.setAttribute('dur', refreshDuration + 'ms');
-                                 animate.setAttribute('calcMode', 'linear');
-
-                                 polygon.appendChild(animate);
-                                 svg.appendChild(polygon);
-                               }
-                             }
-                           }
-
-                           refresh();
-                         }
-
-                         function randomize()
-                         {
-                           for(var i = 0; i < points.length; i++)
-                           {
-                             if(points[i].originX != 0 && points[i].originX != unitWidth * (numPointsX - 1))
-                             {
-                               points[i].x = points[i].originX + Math.random() * unitWidth - unitWidth / 2;
-                             }
-                             if(points[i].originY != 0 && points[i].originY != unitHeight * (numPointsY - 1))
-                             {
-                               points[i].y = points[i].originY + Math.random() * unitHeight - unitHeight / 2;
-                             }
-                           }
-                         }
-
-                         function refresh()
-                         {
-                           //randomize();
-                           for(var i = 0; i < canvas.querySelector('svg').childNodes.length; i++)
-                           {
-                             var polygon = canvas.querySelector('svg').childNodes[i];
-                             var animate = polygon.firstChild;
-
-                             if(animate.getAttribute('to'))
-                             {
-                               animate.setAttribute('from', animate.getAttribute('to'));
-                             }
-                             animate.setAttribute(
-                               'to',
-                               points[polygon.point1].x + ',' + points[polygon.point1].y + ' '
-                               + points[polygon.point2].x + ',' + points[polygon.point2].y + ' '
-                               + points[polygon.point3].x + ',' + points[polygon.point3].y
-                             );
-                             try
-                             {
-                               animate.beginElement();
-                             }
-                             catch(err)
-                             {
-                             }
-                           }
-                         }
-
-                         animatedCanvas();
-                       }
+                            var frag = document.createDocumentFragment();
+                            var currentHeight = 0;
+                            while(currentHeight < this.clientHeight + this.size)
+                            {
+                              var currentWidth = 0;
+                              var rowEle = document.createElement('div');
+                              while(currentWidth < this.clientWidth + this.size)
+                              {
+                                var ele = document.createElement('fort-hex');
+                                rowEle.appendChild(ele);
+                                currentWidth += this.size;
+                              }
+                              currentHeight += this.size;
+                              frag.appendChild(rowEle);
+                            }
+                            this.$.hexContainer.appendChild(frag);
+                          },
+        _sizeChanged:     function (newVal)
+                          {
+                            this.updateStyles({'--fort-hex-size': newVal + 'px'});
+                            this.redraw();
+                          },
+        _colorChanged:    function (newVal)
+                          {
+                            this.updateStyles({'--fort-animbg-background-color': newVal});
+                          },
+        _strengthChanged: function (newVal)
+                          {
+                            this.updateStyles({'--fort-hex-strength': newVal});
+                          }
       }
     );
   </script>

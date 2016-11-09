@@ -26,33 +26,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <body unresolved>
 
-<div>
-  <p>An example of <code>&lt;fort-animbg&gt;</code>:</p>
+<p>An example of <code>&lt;fort-animbg&gt;</code>:</p>
 
-  <fort-animbg color="#f00" fill>
-    Content Here
-  </fort-animbg>
+<dom-bind>
+  <template>
+    <x-colorpick color="{{color}}"></x-colorpick>
+    <br>
+    <fort-animbg color="{{color}}" strength="20" size="100" fixed-size style="width:500px; height:300px;">
+      <div>Content Here</div>
+    </fort-animbg>
+  </template>
+</dom-bind>
 
-  <fort-animbg color="lightblue">
-    Here is some content
-  </fort-animbg>
-
-  <fort-animbg color="#0f0">
-    <div style="width:200px; height:200px;">Content Here</div>
-  </fort-animbg>
-
-  <fort-animbg color="yellow" size="100" fixed-size>
-    <div style="width:300px; height:500px;">Content Here</div>
-  </fort-animbg>
-
-  <fort-animbg size="10">
-    <div style="width:300px; height:500px;">Content Here</div>
-  </fort-animbg>
-
-  <fort-animbg size="10" speed="1000">
-    <div style="width:300px; height:500px;">Content Here</div>
-  </fort-animbg>
-
-</div>
+<dom-module id="x-colorpick" attributes="color">
+  <template>
+    <input type="color" value="{{color::change}}">
+  </template>
+  <script>
+    Polymer(
+      {
+        is:         'x-colorpick',
+        properties: {
+          color: {
+            type: String, notify: true, value: 'darkblue'
+          }
+        }
+      }
+    );
+  </script>
+</dom-module>
 </body>
 </html>

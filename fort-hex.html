@@ -1,0 +1,73 @@
+<link href="../polymer/polymer.html" rel="import">
+
+<dom-module id="fort-hex">
+  <template>
+    <style>
+      :host {
+        position: relative;
+        width: var(--fort-hex-width);
+        height: var(--fort-hex-height);
+        background-color: #ffffff;
+        display: inline-block;
+        opacity: calc(var(--fort-hex-strength, 20) / 100);
+        margin: calc((var(--fort-hex-height) / 5) + var(--fort-hex-margin, 5px)) var(--fort-hex-margin, 5px);
+
+        animation-name: fade;
+        animation-delay: var(--fort-hex-delay);
+        animation-duration: var(--fort-hex-duration);
+        animation-iteration-count: infinite;
+        animation-direction: alternate;
+        animation-fill-mode: both;
+
+        -webkit-transform: translate3d(0, 0, 0);
+        -moz-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+        -o-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+      }
+
+      :host:before,
+      :host:after {
+        content: "";
+        position: absolute;
+        width: 0;
+        border-left: calc(var(--fort-hex-width) / 2) solid transparent;
+        border-right: calc(var(--fort-hex-width) / 2) solid transparent;
+      }
+
+      :host:before {
+        bottom: 100%;
+        border-bottom: calc(var(--fort-hex-height) / 2) solid #ffffff;
+      }
+
+      :host:after {
+        top: 100%;
+        width: 0;
+        border-top: calc(var(--fort-hex-height) / 2) solid #ffffff;
+      }
+
+      @keyframes fade {
+        from {
+          opacity: 0.05;
+        }
+      }
+    </style>
+  </template>
+
+  <script>
+    Polymer(
+      {
+        is:       'fort-hex',
+        attached: function ()
+                  {
+                    this.updateStyles(
+                      {
+                        '--fort-hex-delay':    (Math.random() * 3000).toFixed(2) + 'ms',
+                        '--fort-hex-duration': (500 + (Math.random() * 1500)).toFixed(2) + 'ms'
+                      }
+                    );
+                  }
+      }
+    );
+  </script>
+</dom-module>
