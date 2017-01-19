@@ -1,6 +1,6 @@
-_[Demo and API docs](http://elements.fortifi.it/elements/fort-animbg)_
+_[Demo and API docs](http://elements.cubex.it/elements/cube-animbg)_
 
-##&lt;fort-animbg&gt;
+##&lt;cube-animbg&gt;
 
 An element providing a starting point for your own reusable Polymer elements.
 
@@ -30,4 +30,4 @@ And you can run it via:
     polyserve
 
 Once running, you can preview your element at
-`http://localhost:8080/components/fort-animbg/`, where `fort-animbg` is the name of the directory containing it.
+`http://localhost:8080/components/cube-animbg/`, where `cube-animbg` is the name of the directory containing it.

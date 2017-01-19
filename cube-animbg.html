@@ -1,32 +1,32 @@
 <link href="../polymer/polymer.html" rel="import">
-<link href="fort-hex.html" rel="import">
+<link href="cube-hex.html" rel="import">
 
 <!--
-Fortifi Animated Background
+Cubex- Animated Background
 
 Default Usage Example:
 
-    <fort-animbg></fort-animbg>
+    <cube-animbg></cube-animbg>
 
 Add Custom Colour Example (any valid CSS background value):
 
-    <fort-animbg color="red"></fort-animbg>
+    <cube-animbg color="red"></cube-animbg>
 
 Fill Containing Element Example:
 
-    <fort-animbg fill></fort-animbg>
+    <cube-animbg fill></cube-animbg>
 
 Polygon Rotation Speed Example:
 
-    <fort-animbg speed="8000"></fort-animbg>
+    <cube-animbg speed="8000"></cube-animbg>
 
 Define Fixed Polygon Size Example (polygon size = size):
 
-    <fort-animbg size="200" fixed-size></fort-animbg>
+    <cube-animbg size="200" fixed-size></cube-animbg>
 
 Define Dynamic Polygon Size Example (polygon size = (canvas.width + canvas.height) / size):
 
-    <fort-animbg size="5"></fort-animbg>
+    <cube-animbg size="5"></cube-animbg>
 
 Default Polygon Size = (canvas.width + canvas.height) / 20)
 
@@ -34,17 +34,17 @@ Default Polygon Size = (canvas.width + canvas.height) / 20)
 -->
 
 
-<dom-module id="fort-animbg" attributes="color size speed fixed-size fill strength">
+<dom-module id="cube-animbg" attributes="color size speed fixed-size fill strength">
   <template>
     <style>
       :host {
-        --fort-hex-ratio: 0.577333333333333;
-        --fort-hex-width: var(--fort-hex-size, 30px);
-        --fort-hex-height: calc(var(--fort-hex-width) * var(--fort-hex-ratio));
+        --cube-hex-ratio: 0.577333333333333;
+        --cube-hex-width: var(--cube-hex-size, 30px);
+        --cube-hex-height: calc(var(--cube-hex-width) * var(--cube-hex-ratio));
 
         position: relative;
         display: inline-block;
-        background-color: var(--fort-animbg-background-color);
+        background-color: var(--cube-animbg-background-color);
 
         -webkit-transform: translate3d(0, 0, 0);
         -moz-transform: translate3d(0, 0, 0);
@@ -69,10 +69,10 @@ Default Polygon Size = (canvas.width + canvas.height) / 20)
 
       #hexContainer {
         position: absolute;
-        top: calc(var(--fort-hex-size) / 3 * -1);
-        right: calc(var(--fort-hex-size) / 3 * -1);
-        bottom: calc(var(--fort-hex-size) / 3 * -1);
-        left: calc(var(--fort-hex-size) / 3 * -1);
+        top: calc(var(--cube-hex-size) / 3 * -1);
+        right: calc(var(--cube-hex-size) / 3 * -1);
+        bottom: calc(var(--cube-hex-size) / 3 * -1);
+        left: calc(var(--cube-hex-size) / 3 * -1);
       }
 
       #hexContainer > div {
@@ -80,7 +80,7 @@ Default Polygon Size = (canvas.width + canvas.height) / 20)
       }
 
       #hexContainer > div:nth-of-type(2n) {
-        margin-left: calc(((var(--fort-hex-width) / 2) + var(--fort-hex-margin, 5px)) * -1);
+        margin-left: calc(((var(--cube-hex-width) / 2) + var(--cube-hex-margin, 5px)) * -1);
       }
     </style>
 
@@ -95,7 +95,7 @@ Default Polygon Size = (canvas.width + canvas.height) / 20)
   <script>
     Polymer(
       {
-        is:               'fort-animbg',
+        is:               'cube-animbg',
         properties:       {
           color:    {
             type:     String,
@@ -137,7 +137,7 @@ Default Polygon Size = (canvas.width + canvas.height) / 20)
                               var rowEle = document.createElement('div');
                               while(currentWidth < this.clientWidth + this.size)
                               {
-                                var ele = document.createElement('fort-hex');
+                                var ele = document.createElement('cube-hex');
                                 rowEle.appendChild(ele);
                                 currentWidth += this.size;
                               }
@@ -148,16 +148,16 @@ Default Polygon Size = (canvas.width + canvas.height) / 20)
                           },
         _sizeChanged:     function (newVal)
                           {
-                            this.updateStyles({'--fort-hex-size': newVal + 'px'});
+                            this.updateStyles({'--cube-hex-size': newVal + 'px'});
                             this.redraw();
                           },
         _colorChanged:    function (newVal)
                           {
-                            this.updateStyles({'--fort-animbg-background-color': newVal});
+                            this.updateStyles({'--cube-animbg-background-color': newVal});
                           },
         _strengthChanged: function (newVal)
                           {
-                            this.updateStyles({'--fort-hex-strength': newVal});
+                            this.updateStyles({'--cube-hex-strength': newVal});
                           }
       }
     );

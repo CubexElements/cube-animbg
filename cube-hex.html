@@ -1,20 +1,20 @@
 <link href="../polymer/polymer.html" rel="import">
 
-<dom-module id="fort-hex">
+<dom-module id="cube-hex">
   <template>
     <style>
       :host {
         position: relative;
-        width: var(--fort-hex-width);
-        height: var(--fort-hex-height);
+        width: var(--cube-hex-width);
+        height: var(--cube-hex-height);
         background-color: #ffffff;
         display: inline-block;
-        opacity: calc(var(--fort-hex-strength, 20) / 100);
-        margin: calc((var(--fort-hex-height) / 5) + var(--fort-hex-margin, 5px)) var(--fort-hex-margin, 5px);
+        opacity: calc(var(--cube-hex-strength, 20) / 100);
+        margin: calc((var(--cube-hex-height) / 5) + var(--cube-hex-margin, 5px)) var(--cube-hex-margin, 5px);
 
         animation-name: fade;
-        animation-delay: var(--fort-hex-delay);
-        animation-duration: var(--fort-hex-duration);
+        animation-delay: var(--cube-hex-delay);
+        animation-duration: var(--cube-hex-duration);
         animation-iteration-count: infinite;
         animation-direction: alternate;
         animation-fill-mode: both;
@@ -31,19 +31,19 @@
         content: "";
         position: absolute;
         width: 0;
-        border-left: calc(var(--fort-hex-width) / 2) solid transparent;
-        border-right: calc(var(--fort-hex-width) / 2) solid transparent;
+        border-left: calc(var(--cube-hex-width) / 2) solid transparent;
+        border-right: calc(var(--cube-hex-width) / 2) solid transparent;
       }
 
       :host:before {
         bottom: 100%;
-        border-bottom: calc(var(--fort-hex-height) / 2) solid #ffffff;
+        border-bottom: calc(var(--cube-hex-height) / 2) solid #ffffff;
       }
 
       :host:after {
         top: 100%;
         width: 0;
-        border-top: calc(var(--fort-hex-height) / 2) solid #ffffff;
+        border-top: calc(var(--cube-hex-height) / 2) solid #ffffff;
       }
 
       @keyframes fade {
@@ -57,13 +57,13 @@
   <script>
     Polymer(
       {
-        is:       'fort-hex',
+        is:       'cube-hex',
         attached: function ()
                   {
                     this.updateStyles(
                       {
-                        '--fort-hex-delay':    (Math.random() * 3000).toFixed(2) + 'ms',
-                        '--fort-hex-duration': (500 + (Math.random() * 1500)).toFixed(2) + 'ms'
+                        '--cube-hex-delay':    (Math.random() * 3000).toFixed(2) + 'ms',
+                        '--cube-hex-duration': (500 + (Math.random() * 1500)).toFixed(2) + 'ms'
                       }
                     );
                   }

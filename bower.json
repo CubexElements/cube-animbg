@@ -1,5 +1,5 @@
 {
-  "name": "fort-animbg",
+  "name": "cube-animbg",
   "version": "1.0.0",
   "authors": [
     "Anonymous <anonymous@example.com>"
@@ -11,9 +11,9 @@
     "seed"
   ],
   "private": true,
-  "main": "fort-animbg.html",
+  "main": "cube-animbg.html",
   "license": "MIT",
-  "homepage": "https://github.com/FortifiElements/fort-animbg/",
+  "homepage": "https://github.com/Cubex-Elements/cube-animbg/",
   "ignore": [
     "/.*",
     "/test/",
