@@ -119,7 +119,7 @@ Default Polygon Size = (canvas.width + canvas.height) / 20)
         },
         attached:         function ()
                           {
-                            Polymer.RenderStatus.afterNextRender(this, this.redraw);
+                            Polymer.RenderStatus.afterNextRender(this.redraw.bind(this));
                           },
         redraw:           function ()
                           {
