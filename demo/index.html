@@ -14,8 +14,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <meta name="viewport"
         content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
   <title>cube-gele Demo</title>
-  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-  <link rel="import" href="../cube-animbg.html">
+  <script type="module" src="../cube-animbg.js"></script>
+  <script type="module" src="../node_modules/@polymer/polymer/lib/elements/dom-bind.js"></script>
 
   <style>
     html, body {
@@ -24,36 +24,42 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </style>
 </head>
 
-<body unresolved>
+<body>
 
 <p>An example of <code>&lt;cube-animbg&gt;</code>:</p>
 
 <dom-bind>
   <template>
-    <x-colorpick color="{{color}}"></x-colorpick>
+    <demo-colorpick color="{{color}}"></demo-colorpick>
+    <demo-colorpick color="{{bgColor}}"></demo-colorpick>
     <br>
-    <cube-animbg color="{{color}}" strength="20" size="100" fixed-size style="width:500px; height:300px;">
+    <cube-animbg color="{{color}}" background="{{bgColor}}" strength="20" size="100" fixed-size
+                 style="width:500px; height:300px;">
       <div>Content Here</div>
     </cube-animbg>
   </template>
 </dom-bind>
 
-<dom-module id="x-colorpick" attributes="color">
-  <template>
-    <input type="color" value="{{color::change}}">
-  </template>
-  <script>
-    Polymer(
-      {
-        is:         'x-colorpick',
-        properties: {
-          color: {
-            type: String, notify: true, value: 'darkblue'
-          }
+<script type="module">
+  import '../cube-animbg.js';
+  import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+
+  class DemoColorPick extends PolymerElement {
+    static get is() {return 'demo-colorpick';}
+
+    static get template() {return html`<input type="color" value="{{color::change}}">`;}
+
+    static get properties()
+    {
+      return {
+        color: {
+          type: String, notify: true, value: function () {return '#' + (Math.random() * 0xFFFFFF << 0).toString(16);}
         }
       }
-    );
-  </script>
-</dom-module>
+    }
+  }
+
+  customElements.define(DemoColorPick.is, DemoColorPick);
+</script>
 </body>
 </html>

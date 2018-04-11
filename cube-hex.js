@@ -1,13 +1,21 @@
-<link href="../polymer/polymer.html" rel="import">
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 
-<dom-module id="cube-hex">
-  <template>
+class CubeHex extends PolymerElement {
+  static get is() {return 'cube-hex'}
+
+  static get template()
+  {
+    return html`
     <style>
       :host {
+        --cube-hex-width: var(--cube-hex-size, 30px);
+        --cube-hex-height: calc(var(--cube-hex-width) * 0.577333333333333);
+        
+        color: var(--cube-hex-color, red);
         position: relative;
         width: var(--cube-hex-width);
         height: var(--cube-hex-height);
-        background-color: #ffffff;
+        background: currentColor;
         display: inline-block;
         opacity: calc(var(--cube-hex-strength, 20) / 100);
         margin: calc((var(--cube-hex-height) / 5) + var(--cube-hex-margin, 5px)) var(--cube-hex-margin, 5px);
@@ -37,13 +45,13 @@
 
       :host:before {
         bottom: 100%;
-        border-bottom: calc(var(--cube-hex-height) / 2) solid #ffffff;
+        border-bottom: calc(var(--cube-hex-height) / 2) solid currentColor;
       }
 
       :host:after {
         top: 100%;
         width: 0;
-        border-top: calc(var(--cube-hex-height) / 2) solid #ffffff;
+        border-top: calc(var(--cube-hex-height) / 2) solid currentColor;
       }
 
       @keyframes fade {
@@ -51,23 +59,19 @@
           opacity: 0.05;
         }
       }
-    </style>
-  </template>
+    </style>`;
+  }
 
-  <script>
-    Polymer(
+  connectedCallback()
+  {
+    super.connectedCallback();
+    this.updateStyles(
       {
-        is:       'cube-hex',
-        attached: function ()
-                  {
-                    this.updateStyles(
-                      {
-                        '--cube-hex-delay':    (Math.random() * 3000).toFixed(2) + 'ms',
-                        '--cube-hex-duration': (500 + (Math.random() * 1500)).toFixed(2) + 'ms'
-                      }
-                    );
-                  }
+        '--cube-hex-delay':    (Math.random() * 3000).toFixed(2) + 'ms',
+        '--cube-hex-duration': (500 + (Math.random() * 1500)).toFixed(2) + 'ms'
       }
     );
-  </script>
-</dom-module>
+  }
+}
+
+customElements.define(CubeHex.is, CubeHex);
